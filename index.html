@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Dark Sky Lighting Inventory — RASC-compatible tool for surveying and improving outdoor lighting at dark sky sites.">
 <meta name="theme-color" content="#0F6E56">
-<title>Dark Sky Lighting Inventory</title>
+<title>Dark Sky Lighting Inventory v2.3</title>
 
 <!-- PWA manifest -->
 <link rel="manifest" href="manifest.json">
@@ -109,7 +109,7 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
 
 <div class="hdr">
   <div class="hico"><i class="ti ti-moon-stars"></i></div>
-  <div><h1>Dark Sky Lighting Inventory</h1><p>RASC-compatible · EXIF geo · spectrum · year-over-year tracking</p></div>
+  <div><h1>Dark Sky Lighting Inventory <span style="font-size:11px;opacity:.7;font-weight:300">v2.3</span></h1><p>RASC-compatible · EXIF geo · spectrum · year-over-year tracking</p></div>
 </div>
 
 <nav class="tabs" id="nav">
@@ -294,6 +294,7 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
       </div>
       <div class="card">
         <div class="ct"><i class="ti ti-moon-stars"></i> RASC 5-principle framework</div>
+        <div id="principles-svg-container" style="margin-bottom:.75rem"></div>
         <div style="display:grid;gap:.5rem" id="principles-list"></div>
       </div>
     </div>
@@ -484,6 +485,6 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
   <button class="btn btn-s" style="background:none;color:rgba(255,255,255,.7);border:none" onclick="document.getElementById('install-banner').style.display='none'">✕</button>
 </div>
 
-<script src="src/app.js?v=2.2"></script>
+<script src="src/app.js?v=2.3"></script>
 </body>
 </html>

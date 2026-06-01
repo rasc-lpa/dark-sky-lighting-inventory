@@ -87,11 +87,16 @@ const TIPS = {
   },
   compliant: {
     title: 'Compliance assessment',
-    text: 'Compliant means the fixture satisfies all five RASC principles: Need, Target, Quantity, Colour (≤2700K), and Control.',
+    text: 'A fixture is compliant if it satisfies all five RASC principles:',
     items: [
-      { label: 'Yes',              col: '#0F6E56', desc: 'Meets all five principles.' },
-      { label: 'No',               col: '#A32D2D', desc: 'Fails one or more. Note the reason in Comments.' },
-      { label: 'To be determined', col: '#BA7517', desc: 'Awaiting more info — e.g. CCT unknown, owner not consulted.' }
+      { label: 'N — Need',     col: '#0F6E56', desc: 'Is permanent lighting truly necessary here?' },
+      { label: 'T — Target',   col: '#0F6E56', desc: 'Fully shielded, aimed downward, no light beyond target area.' },
+      { label: 'Q — Quantity', col: '#0F6E56', desc: 'Lowest illumination level needed for the task.' },
+      { label: 'C — Colour',   col: '#BA7517', desc: 'CCT ≤2200K (best) or ≤2700K (acceptable). No blue-rich light.' },
+      { label: 'C — Control',  col: '#0F6E56', desc: 'Off or dimmed when not in use. Motion sensor or timer preferred.' },
+      { label: 'Yes',          col: '#0F6E56', desc: '✓ Meets all five principles above.' },
+      { label: 'No',           col: '#A32D2D', desc: '✗ Fails one or more — note which in Comments.' },
+      { label: 'TBD',          col: '#BA7517', desc: '? More info needed before deciding.' }
     ]
   },
   zone: {
@@ -929,6 +934,10 @@ const S = {
   // ── GUIDE ─────────────────────────────────────────────────────────────────
 
   renderGuide() {
+    // Render 5-principles SVG illustration
+    const svgCon = document.getElementById('principles-svg-container');
+    if (svgCon) svgCon.innerHTML = S.principlesSVG();
+
     const pl = document.getElementById('principles-list');
     if (pl) pl.innerHTML = PRINCIPLES.map(p =>
       `<div style="display:flex;gap:9px;padding:.6rem;background:var(--cgl);border-radius:7px"><div style="width:26px;height:26px;background:${p[1]};color:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:500;font-size:11px">${p[0]}</div><div><strong style="font-size:12px">${p[2]}</strong><br><span style="font-size:11px;color:var(--color-text-secondary,#666)">${p[3]}</span></div></div>`
@@ -936,6 +945,112 @@ const S = {
     S.showHelpSection('quickstart', document.querySelector('#tab-help .os-tab'));
     const gs = document.getElementById('getting-started');
     if (gs) gs.classList.toggle('hidden', !!localStorage.getItem('dsky_walkthrough_dismissed'));
+  },
+
+  principlesSVG() {
+    const W = 620, H = 200;
+    const cols = ['#1a5c42','#1a5c42','#1a5c42','#8a5a10','#1a5c42'];
+    const labels = ['Need','Target','Quantity','Colour','Control'];
+    const icons = [
+      // Need — question mark / light bulb with cross
+      `<circle cx="0" cy="-18" r="10" fill="none" stroke="#fff" stroke-width="1.5"/>
+       <line x1="0" y1="-8" x2="0" y2="8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+       <circle cx="0" cy="14" r="2" fill="#fff"/>`,
+      // Target — downward beam with ground circle
+      `<rect x="-6" y="-22" width="12" height="8" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/>
+       <rect x="-10" y="-14" width="20" height="4" rx="1" fill="#fff" opacity=".9"/>
+       <path d="M-6 -10 L6 -10 L8 12 L-8 12 Z" fill="#fff" opacity=".25"/>
+       <ellipse cx="0" cy="14" rx="9" ry="3" fill="#fff" opacity=".6"/>`,
+      // Quantity — dial / dimmer
+      `<circle cx="0" cy="-4" r="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+       <line x1="0" y1="-4" x2="0" y2="-15" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+       <line x1="-14" y1="-4" x2="-18" y2="-4" stroke="#fff" stroke-width="1.2" opacity=".5"/>
+       <line x1="14" y1="-4" x2="18" y2="-4" stroke="#fff" stroke-width="1.2" opacity=".5"/>
+       <line x1="-10" y1="-14" x2="-13" y2="-17" stroke="#fff" stroke-width="1.2" opacity=".5"/>
+       <line x1="10" y1="-14" x2="13" y2="-17" stroke="#fff" stroke-width="1.2" opacity=".5"/>
+       <text x="0" y="20" text-anchor="middle" font-size="8" fill="#fff" opacity=".7">LOW</text>`,
+      // Colour — warm amber spectrum arc
+      `<defs><linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%">
+         <stop offset="0%" stop-color="#ff4444"/>
+         <stop offset="30%" stop-color="#ff9900"/>
+         <stop offset="55%" stop-color="#ffcc00"/>
+         <stop offset="75%" stop-color="#ffffff"/>
+         <stop offset="100%" stop-color="#aaaaff"/>
+       </linearGradient></defs>
+       <rect x="-18" y="-8" width="36" height="7" rx="3" fill="url(#cg)"/>
+       <rect x="-18" y="-8" width="36" height="7" rx="3" fill="none" stroke="#fff" stroke-width="1" opacity=".4"/>
+       <line x1="-6" y1="-8" x2="-6" y2="-16" stroke="#ffcc00" stroke-width="2" stroke-linecap="round"/>
+       <text x="-6" y="-19" text-anchor="middle" font-size="7" fill="#ffcc00">2200K</text>
+       <text x="0" y="14" text-anchor="middle" font-size="7.5" fill="#fff" opacity=".8">≤2700K</text>`,
+      // Control — clock / timer
+      `<circle cx="0" cy="-4" r="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+       <line x1="0" y1="-4" x2="0" y2="-14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+       <line x1="0" y1="-4" x2="8" y2="-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+       <line x1="-14" y1="-4" x2="-12" y2="-4" stroke="#fff" stroke-width="1" opacity=".5"/>
+       <line x1="14" y1="-4" x2="12" y2="-4" stroke="#fff" stroke-width="1" opacity=".5"/>
+       <line x1="0" y1="-18" x2="0" y2="-16" stroke="#fff" stroke-width="1" opacity=".5"/>
+       <line x1="0" y1="10" x2="0" y2="8" stroke="#fff" stroke-width="1" opacity=".5"/>
+       <text x="0" y="20" text-anchor="middle" font-size="7.5" fill="#fff" opacity=".8">TIMER</text>`
+    ];
+    const descs = [
+      'Is this light|really needed?',
+      'Fully shielded,|aimed downward',
+      'Lowest level|for the task',
+      'Warm amber|≤2700K',
+      'Off or dim|when not needed'
+    ];
+    const badgeColors = ['#2ECFA0','#2ECFA0','#2ECFA0','#D4A24C','#2ECFA0'];
+    const panelW = W / 5;
+
+    let panels = labels.map((lbl, i) => {
+      const cx = panelW * i + panelW / 2;
+      // Pole and arm
+      const pole = `<line x1="${cx}" y1="${H-20}" x2="${cx}" y2="${H*0.28}" stroke="#aaa" stroke-width="2.5"/>`;
+      // Fixture box
+      const fx = `<rect x="${cx-16}" y="${H*0.28-18}" width="32" height="18" rx="3" fill="${cols[i]}" stroke="#fff" stroke-width="1.2"/>`;
+      // Light cone
+      const coneH = H * 0.38;
+      const cone = `<path d="M${cx-14} ${H*0.28} L${cx+14} ${H*0.28} L${cx+28} ${H*0.28+coneH} L${cx-28} ${H*0.28+coneH} Z" fill="${cols[i]}" opacity=".18"/>`;
+      // Ground ellipse
+      const gnd = `<ellipse cx="${cx}" cy="${H*0.28+coneH+3}" rx="28" ry="5" fill="${cols[i]}" opacity=".25"/>`;
+      // Icon group
+      const iconG = `<g transform="translate(${cx},${H*0.28-9})">${icons[i]}</g>`;
+      // Badge letter
+      const badge = `<circle cx="${cx}" cy="${H*0.28-28}" r="11" fill="${badgeColors[i]}"/>
+        <text x="${cx}" y="${H*0.28-24}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">${lbl[0]}</text>`;
+      // Label
+      const label = `<text x="${cx}" y="${H-6}" text-anchor="middle" font-size="10" font-weight="600" fill="${badgeColors[i]}" letter-spacing=".5">${lbl.toUpperCase()}</text>`;
+      // Description lines
+      const dLines = descs[i].split('\n').map((d, di) =>
+        `<text x="${cx}" y="${H*0.78 + di*12}" text-anchor="middle" font-size="8.5" fill="#ccc">${d}</text>`
+      ).join('');
+      return pole + cone + gnd + fx + iconG + badge + dLines + label;
+    }).join('');
+
+    // Stars
+    const stars = Array.from({length:28}, (_,i) => {
+      const sx = (i * 73 + 17) % W, sy = (i * 41 + 7) % (H * 0.55);
+      const sr = i % 3 === 0 ? 1.2 : 0.7;
+      return `<circle cx="${sx}" cy="${sy}" r="${sr}" fill="#fff" opacity="${0.3 + (i%4)*0.15}"/>`;
+    }).join('');
+
+    // Dividers
+    const dividers = [1,2,3,4].map(i =>
+      `<line x1="${panelW*i}" y1="0" x2="${panelW*i}" y2="${H}" stroke="rgba(255,255,255,.06)" stroke-width="1"/>`
+    ).join('');
+
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:8px;display:block">
+      <defs>
+        <linearGradient id="skybg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#060e1c"/>
+          <stop offset="100%" stop-color="#0d2235"/>
+        </linearGradient>
+      </defs>
+      <rect width="${W}" height="${H}" fill="url(#skybg)" rx="8"/>
+      ${stars}
+      ${dividers}
+      ${panels}
+    </svg>`;
   },
 
   showHelpSection(section, btn) {
