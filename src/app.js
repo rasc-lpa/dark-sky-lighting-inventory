@@ -250,7 +250,7 @@ const S = {
 
   fxCard(f, i) {
     const bc = f.compliant === 'Yes' ? 'bc' : f.compliant === 'No' ? 'bn' : 'bt';
-    return `<div class="fx">
+    return `<div class="fx" id="fx-${f.id}">
       <div class="fxh">
         <span class="fxid"><i class="ti ti-bulb" style="font-size:12px"></i> ${f.fixId || 'Fixture ' + (i + 1)}</span>
         <div style="display:flex;gap:5px;align-items:center">
@@ -449,33 +449,24 @@ const S = {
       <div class="ct"><i class="ti ti-bulb"></i> ${f.fixId || 'Fixture ' + (i + 1)} — ${f.location || f.purpose || ''}
         ${f.geoLat
           ? `<span style="font-size:10px;font-weight:400;color:var(--color-text-secondary,#666);margin-left:auto"><i class="ti ti-map-pin"></i> ${f.geoLat.toFixed(5)}, ${f.geoLon.toFixed(5)} ${f.geoSrc === 'exif' ? '(EXIF)' : '(GPS)'}</span>`
-          : '<span style="font-size:10px;font-weight:400;color:var(--ca);margin-left:auto"><i class="ti ti-map-pin-off"></i> No location — upload a geo-tagged photo</span>'}
+          : '<span style="font-size:10px;font-weight:400;color:var(--ca);margin-left:auto"><i class="ti ti-map-pin-off"></i> No location</span>'}
       </div>
-
-      <div style="margin-bottom:.6rem">
-        <div style="font-size:10px;font-weight:500;color:var(--color-text-secondary,#666);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Photos</div>
-        <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:flex-start">
-          ${(f.photos || []).map((p, pi) => `<div class="pi"><img class="pth" src="${p.data}" style="cursor:zoom-in" title="Click to enlarge" onclick="S.lightboxId('${f.id}','photo',${pi})"><button class="prm" onclick="S.remPhoto('${f.id}',${pi})">×</button></div>`).join('')}
-          <label style="width:64px;height:64px;border:1.5px dashed rgba(0,0,0,.18);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:2px;color:var(--color-text-secondary,#666);transition:.15s;font-size:9px;text-align:center;padding:4px" onmouseover="this.style.borderColor='var(--ct)';this.style.background='var(--ctl)'" onmouseout="this.style.borderColor='rgba(0,0,0,.18)';this.style.background=''" onclick="document.getElementById('pin-${f.id}').click()">
-            <i class="ti ti-camera-plus" style="font-size:18px"></i>Add
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem">
+        <div>
+          <div style="font-size:11px;font-weight:500;margin-bottom:5px;color:var(--color-text-secondary,#666)">Daytime photos</div>
+          <div class="pr">${(f.photos || []).map((p, pi) => `<div class="pi"><img class="pth" src="${p.data}" style="cursor:zoom-in" title="Click to enlarge" onclick="S.lightboxId('${f.id}','photo',${pi})"><button class="prm" onclick="S.remPhoto('${f.id}',${pi})">×</button></div>`).join('')}</div>
+          <label class="pdrop" style="display:block;margin-top:6px" onclick="document.getElementById('pin-${f.id}').click()">
+            <i class="ti ti-camera-plus" style="font-size:16px;display:block;margin-bottom:2px"></i>Add photo
+            <span style="font-size:9px;display:block;margin-top:1px">GPS extracted from EXIF automatically</span>
           </label>
           <input type="file" accept="image/*" multiple style="display:none" id="pin-${f.id}" onchange="S.addPhoto(event,'${f.id}')">
         </div>
-        <div style="font-size:9px;color:var(--color-text-secondary,#666);margin-top:4px">GPS extracted from photo EXIF automatically</div>
-      </div>
-
-      <div>
-        <div style="font-size:10px;font-weight:500;color:var(--color-text-secondary,#666);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Spectrum screenshot</div>
-        ${f.spectrum
-          ? `<div style="display:flex;align-items:flex-start;gap:10px">
-              <img src="${f.spectrum.data}" style="max-height:100px;border-radius:6px;border:.5px solid rgba(0,0,0,.1);cursor:zoom-in" title="Click to enlarge" onclick="S.lightboxId('${f.id}','spectrum')" alt="Spectrum">
-              <button class="btn btn-s btn-d" onclick="S.remSpec('${f.id}')"><i class="ti ti-trash"></i> Remove</button>
-            </div>`
-          : `<label style="display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1.5px dashed rgba(0,0,0,.18);border-radius:7px;cursor:pointer;font-size:11px;color:var(--color-text-secondary,#666);transition:.15s" onmouseover="this.style.borderColor='var(--ca)';this.style.background='var(--cal)'" onmouseout="this.style.borderColor='rgba(0,0,0,.18)';this.style.background=''" onclick="document.getElementById('sin-${f.id}').click()">
-              <i class="ti ti-wave-sine" style="font-size:15px"></i> Upload spectrum screenshot
-              <span style="font-size:9px;color:var(--color-text-secondary,#666)">(PNG/JPG)</span>
-            </label>
-            <input type="file" accept="image/*" style="display:none" id="sin-${f.id}" onchange="S.addSpec(event,'${f.id}')">`}
+        <div>
+          <div style="font-size:11px;font-weight:500;margin-bottom:5px;color:var(--color-text-secondary,#666)">Spectrum screenshot</div>
+          ${f.spectrum
+            ? `<img src="${f.spectrum.data}" class="sprev" style="cursor:zoom-in" title="Click to enlarge" onclick="S.lightboxId('${f.id}','spectrum')" alt="Spectrum"><button class="btn btn-s btn-d" style="margin-top:5px" onclick="S.remSpec('${f.id}')"><i class="ti ti-trash"></i> Remove</button>`
+            : `<label class="sdrop" style="display:block" onclick="document.getElementById('sin-${f.id}').click()"><i class="ti ti-wave-sine" style="font-size:16px;display:block;margin-bottom:2px"></i>Upload spectrum<span style="font-size:9px;display:block;margin-top:1px">PNG/JPG from spectrometer app</span></label><input type="file" accept="image/*" style="display:none" id="sin-${f.id}" onchange="S.addSpec(event,'${f.id}')">`}
+        </div>
       </div>
     </div>`).join('');
   },
@@ -582,8 +573,8 @@ const S = {
       ${S.buildMap(geo)}
       ${S.buildYoY(fx, pfx, ly, prev, yrs, cr, totalW, cctWarn)}
       <div class="card"><div class="ct"><i class="ti ti-list-details"></i> Fixture table</div>
-        <div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Purpose</th><th>Type</th><th>CCT</th><th>W</th><th>Shielding</th><th>Control</th><th>Status</th><th>Geo</th></tr></thead>
-        <tbody>${fx.map((f, i) => `<tr><td>${f.fixId || 'F-' + (i + 1)}</td><td>${f.purpose || '—'}</td><td>${f.lumType || '—'}</td><td style="${S.cctStyle(f.cct)}">${f.cct ? f.cct + 'K' : '—'}</td><td>${f.watts ? f.watts + 'W' : '—'}</td><td>${f.shielding || '—'}</td><td>${f.control || '—'}</td><td><span class="bdg ${f.compliant === 'Yes' ? 'bc' : f.compliant === 'No' ? 'bn' : 'bt'}">${f.compliant || 'TBD'}</span></td><td>${f.geoLat ? `<span style="color:var(--ct)">${f.geoSrc === 'exif' ? '📷' : '📍'}</span>` : '—'}</td></tr>`).join('')}</tbody>
+        <div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Purpose</th><th>Type</th><th>CCT</th><th>W</th><th>Shielding</th><th>Control</th><th>Status</th><th>Geo</th><th></th></tr></thead>
+        <tbody>${fx.map((f, i) => `<tr><td>${f.fixId || 'F-' + (i + 1)}</td><td>${f.purpose || '—'}</td><td>${f.lumType || '—'}</td><td style="${S.cctStyle(f.cct)}">${f.cct ? f.cct + 'K' : '—'}</td><td>${f.watts ? f.watts + 'W' : '—'}</td><td>${f.shielding || '—'}</td><td>${f.control || '—'}</td><td><span class="bdg ${f.compliant === 'Yes' ? 'bc' : f.compliant === 'No' ? 'bn' : 'bt'}">${f.compliant || 'TBD'}</span></td><td>${f.geoLat ? `<span style="color:var(--ct)">${f.geoSrc === 'exif' ? '📷' : '📍'}</span>` : '—'}</td><td><button class="btn btn-s" title="Open in Inventory" onclick="S.jumpToFixture('${f.id}')"><i class="ti ti-arrow-right"></i></button></td></tr>`).join('')}</tbody>
         </table></div>
       </div>`;
   },
@@ -645,6 +636,24 @@ const S = {
     saveData();
     alert(`${ny} survey created with ${prev.length} fixture(s) carried over.`);
     S.loadReport(D.cur);
+  },
+
+  jumpToFixture(fid) {
+    // Switch to inventory tab
+    const invTab = document.querySelector('.tab[data-tab="inventory"]');
+    if (invTab) invTab.click();
+    // Wait for tab to render then scroll to the fixture card
+    setTimeout(() => {
+      const el = document.getElementById('fx-' + fid);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Flash highlight so user knows which card was jumped to
+        el.style.transition = 'box-shadow .3s, border-color .3s';
+        el.style.borderColor = 'var(--ct)';
+        el.style.boxShadow = '0 0 0 3px rgba(15,110,86,.2)';
+        setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2000);
+      }
+    }, 150);
   },
 
   exportCSV() {
