@@ -765,6 +765,7 @@ const S = {
       const photoCount   = imported.filter(r => r.photos && r.photos.length).length;
       const specCount    = imported.filter(r => r.spectrum).length;
 
+      S._pendingImport = imported;
       const preview = document.getElementById('csv-preview');
       preview.classList.remove('hidden');
       preview.innerHTML = `
@@ -780,14 +781,15 @@ const S = {
         <div style="margin-top:.75rem;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
           ${!detectedSite ? `<select id="imp-csv-site" style="font-size:12px;padding:4px 8px;border-radius:6px;border:.5px solid rgba(0,0,0,.2)"><option value="">Select target site…</option>${Object.values(D.sites).map(s => `<option value="${s.id}">${s.name}</option>`).join('')}</select>` : ''}
           ${!firstRow.yr ? `<input type="number" id="imp-csv-yr" placeholder="Year" value="${new Date().getFullYear()}" style="width:80px;font-size:12px;padding:4px 8px;border-radius:6px;border:.5px solid rgba(0,0,0,.2)">` : ''}
-          <button class="btn btn-p btn-s" onclick="S.doImport(${JSON.stringify(imported).replace(/</g, '\x3c')})"><i class="ti ti-check"></i> Import ${imported.length} fixtures</button>
+          <button class="btn btn-p btn-s" onclick="S.doImport()"><i class="ti ti-check"></i> Import ${imported.length} fixtures</button>
         </div>`;
     };
     reader.readAsText(file);
   },
 
   doImport(rows) {
-    if (!rows.length) { alert('No rows to import.'); return; }
+    rows = rows || S._pendingImport;
+    if (!rows || !rows.length) { alert('No rows to import.'); return; }
     const first = rows[0];
     // Determine site — auto from CSV or manual selection
     let site, sid;
@@ -830,6 +832,7 @@ const S = {
   },
 
   _manualFxCount: 0,
+  _pendingImport: null,
 
   addManualFx() {
     const n = S._manualFxCount++;
