@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Dark Sky Lighting Inventory — RASC-compatible tool for surveying and improving outdoor lighting at dark sky sites.">
 <meta name="theme-color" content="#0F6E56">
-<title>Dark Sky Lighting Inventory v2.1</title>
+<title>Dark Sky Lighting Inventory</title>
 
 <!-- PWA manifest -->
 <link rel="manifest" href="manifest.json">
@@ -109,7 +109,7 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
 
 <div class="hdr">
   <div class="hico"><i class="ti ti-moon-stars"></i></div>
-  <div><h1>Dark Sky Lighting Inventory <span style="font-size:11px;opacity:.7;font-weight:300">v2.1</span></h1><p>RASC-compatible · EXIF geo · spectrum · year-over-year tracking</p></div>
+  <div><h1>Dark Sky Lighting Inventory</h1><p>RASC-compatible · EXIF geo · spectrum · year-over-year tracking</p></div>
 </div>
 
 <nav class="tabs" id="nav">
@@ -118,7 +118,7 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
   <button class="tab" data-tab="photos"><i class="ti ti-camera"></i> Photos & Spectra</button>
   <button class="tab" data-tab="report"><i class="ti ti-chart-bar"></i> Report & Map</button>
   <button class="tab" data-tab="import"><i class="ti ti-file-import"></i> Import</button>
-  <button class="tab" data-tab="guide"><i class="ti ti-info-circle"></i> Guide</button>
+  <button class="tab" data-tab="help"><i class="ti ti-help"></i> Help</button>
 </nav>
 
 <div class="main">
@@ -126,6 +126,58 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
   <!-- SITES -->
   <div id="tab-sites">
     <div class="bnr"><i class="ti ti-stars" style="font-size:28px;flex-shrink:0"></i><div><h2>Dark Sky Lighting Inventory</h2><p>RASC 5-principle framework: Need · Target · Quantity · Colour · Control</p></div></div>
+
+    <!-- GETTING STARTED WALKTHROUGH -->
+    <div id="getting-started" class="card" style="border-color:rgba(15,110,86,.25);background:var(--ctl)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+        <div class="ct" style="margin-bottom:0"><i class="ti ti-rocket"></i> Getting started</div>
+        <button class="btn btn-s" onclick="S.dismissWalkthrough()" title="Dismiss"><i class="ti ti-x"></i> Dismiss</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--color-background-primary,#fff);border-radius:8px;padding:.75rem;border:.5px solid rgba(15,110,86,.2)">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:.4rem">
+            <div style="width:22px;height:22px;background:var(--ct);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">1</div>
+            <strong style="font-size:12px">Create a site</strong>
+          </div>
+          <p style="font-size:11px;color:var(--color-text-secondary,#666);line-height:1.5">Click <strong>+ New site</strong> below. Enter the site name, lighting zone (LZ0–LZ3), survey date, and your name.</p>
+        </div>
+        <div style="background:var(--color-background-primary,#fff);border-radius:8px;padding:.75rem;border:.5px solid rgba(15,110,86,.2)">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:.4rem">
+            <div style="width:22px;height:22px;background:var(--ct);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">2</div>
+            <strong style="font-size:12px">Add luminaires</strong>
+          </div>
+          <p style="font-size:11px;color:var(--color-text-secondary,#666);line-height:1.5">Go to <strong>Inventory</strong> and click <strong>+ Add fixture</strong> for each outdoor light. Hover the <span style="background:rgba(15,110,86,.15);color:var(--ct);border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">?</span> icons for field guidance.</p>
+        </div>
+        <div style="background:var(--color-background-primary,#fff);border-radius:8px;padding:.75rem;border:.5px solid rgba(15,110,86,.2)">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:.4rem">
+            <div style="width:22px;height:22px;background:var(--ct);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">3</div>
+            <strong style="font-size:12px">Add photos</strong>
+          </div>
+          <p style="font-size:11px;color:var(--color-text-secondary,#666);line-height:1.5">Go to <strong>Photos & Spectra</strong> to attach daytime photos and spectrum screenshots. GPS is extracted from photo EXIF automatically.</p>
+        </div>
+        <div style="background:var(--color-background-primary,#fff);border-radius:8px;padding:.75rem;border:.5px solid rgba(15,110,86,.2)">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:.4rem">
+            <div style="width:22px;height:22px;background:var(--ct);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">4</div>
+            <strong style="font-size:12px">View report</strong>
+          </div>
+          <p style="font-size:11px;color:var(--color-text-secondary,#666);line-height:1.5">Go to <strong>Report & Map</strong> to see compliance rate, a fixture map, and year-over-year comparison. Export CSV to back up your data.</p>
+        </div>
+        <div style="background:var(--color-background-primary,#fff);border-radius:8px;padding:.75rem;border:.5px solid rgba(15,110,86,.2)">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:.4rem">
+            <div style="width:22px;height:22px;background:var(--ct);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">5</div>
+            <strong style="font-size:12px">Return next year</strong>
+          </div>
+          <p style="font-size:11px;color:var(--color-text-secondary,#666);line-height:1.5">Import your saved CSV to restore your data. Click <strong>Start new survey year</strong> in the Report tab — fixtures carry over and you update what has changed.</p>
+        </div>
+        <div style="background:var(--color-background-primary,#fff);border-radius:8px;padding:.75rem;border:.5px solid rgba(15,110,86,.2)">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:.4rem">
+            <div style="width:22px;height:22px;background:var(--ct);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0"><i class="ti ti-info-circle" style="font-size:11px"></i></div>
+            <strong style="font-size:12px">Need more help?</strong>
+          </div>
+          <p style="font-size:11px;color:var(--color-text-secondary,#666);line-height:1.5">See the <strong onclick="document.querySelector('.tab[data-tab=help]').click()" style="color:var(--ct);cursor:pointer">Help</strong> tab for field-by-field reference, GPS setup, spectrum tools, troubleshooting, and the changelog.</p>
+        </div>
+      </div>
+    </div>
     <div class="sh"><div class="stit">Your sites</div><button class="btn btn-p btn-s" onclick="S.showNewSite()"><i class="ti ti-plus"></i> New site</button></div>
     <div class="card hidden" id="new-site-form">
       <div class="ct"><i class="ti ti-map-pin"></i> New site</div>
@@ -212,44 +264,216 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
     </div>
   </div>
 
-  <!-- GUIDE -->
-  <div id="tab-guide" class="hidden">
-    <div class="card">
-      <div class="ct"><i class="ti ti-device-mobile"></i> Enabling GPS in photos</div>
-      <div class="os-tabs"><button class="os-tab active" id="ios-btn" onclick="S.showOS('ios')"><i class="ti ti-brand-apple"></i> iOS</button><button class="os-tab" id="and-btn" onclick="S.showOS('android')"><i class="ti ti-brand-android"></i> Android</button></div>
-      <div id="ios-inst">
-        <div class="inst-step"><div class="inst-num">1</div><div>Open <strong>Settings</strong> on your iPhone or iPad.</div></div>
-        <div class="inst-step"><div class="inst-num">2</div><div>Tap <strong>Privacy & Security → Location Services</strong>. Ensure it is <strong>On</strong>.</div></div>
-        <div class="inst-step"><div class="inst-num">3</div><div>Find <strong>Camera</strong> in the app list → set to <strong>While Using the App</strong>.</div></div>
-        <div class="inst-step"><div class="inst-num">4</div><div>Take photos with the Camera app — GPS embeds automatically.</div></div>
-        <div style="margin-top:.65rem;padding:.65rem;background:var(--cal);border-radius:7px;font-size:11px;color:var(--ca)"><i class="ti ti-alert-triangle"></i> When sharing photos, choose <strong>Original</strong> quality to preserve EXIF data.</div>
+  <!-- HELP -->
+  <div id="tab-help" class="hidden">
+
+    <!-- Help nav -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.85rem">
+      <button class="os-tab active" onclick="S.showHelpSection('quickstart',this)"><i class="ti ti-rocket"></i> Quick start</button>
+      <button class="os-tab" onclick="S.showHelpSection('fields',this)"><i class="ti ti-forms"></i> Field reference</button>
+      <button class="os-tab" onclick="S.showHelpSection('gps',this)"><i class="ti ti-map-pin"></i> GPS setup</button>
+      <button class="os-tab" onclick="S.showHelpSection('spectrum',this)"><i class="ti ti-wave-sine"></i> Spectrum</button>
+      <button class="os-tab" onclick="S.showHelpSection('data',this)"><i class="ti ti-database"></i> Data & backup</button>
+      <button class="os-tab" onclick="S.showHelpSection('trouble',this)"><i class="ti ti-tool"></i> Troubleshooting</button>
+      <button class="os-tab" onclick="S.showHelpSection('changelog',this)"><i class="ti ti-history"></i> Changelog</button>
+    </div>
+
+    <!-- Quick start -->
+    <div id="help-quickstart">
+      <div class="card">
+        <div class="ct"><i class="ti ti-rocket"></i> Quick start guide</div>
+        <div style="display:grid;gap:.6rem">
+          <div class="inst-step"><div class="inst-num">1</div><div><strong>Create a site</strong> — On the Sites tab, click <strong>+ New site</strong>. Enter the site name, lighting zone (LZ0–LZ3), survey date, your name, and contact email. One site per physical location; you can have multiple survey years per site.</div></div>
+          <div class="inst-step"><div class="inst-num">2</div><div><strong>Add luminaires</strong> — Go to the <strong>Inventory</strong> tab, select your site, and click <strong>+ Add fixture</strong> for each outdoor luminaire. Fill in as many fields as possible. Hover the <span style="background:rgba(15,110,86,.15);color:var(--ct);border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">?</span> icons for illustrated guidance on any field.</div></div>
+          <div class="inst-step"><div class="inst-num">3</div><div><strong>Take photos</strong> — With GPS enabled on your phone camera (see GPS Setup below), photograph each luminaire. Upload via the <strong>Photos & Spectra</strong> tab. GPS coordinates are extracted automatically from the photo.</div></div>
+          <div class="inst-step"><div class="inst-num">4</div><div><strong>Add spectrum data</strong> — If you have a spectrometer app, take a screenshot showing the spectral power distribution and upload it to the fixture's spectrum slot.</div></div>
+          <div class="inst-step"><div class="inst-num">5</div><div><strong>Set compliance</strong> — For each fixture, set the <strong>Compliant?</strong> field based on the RASC 5 principles. A fixture is compliant if it meets Need, Target, Quantity, Colour (≤2700K), and Control criteria.</div></div>
+          <div class="inst-step"><div class="inst-num">6</div><div><strong>Export CSV</strong> — Go to <strong>Report & Map</strong> and click <strong>CSV</strong>. Save this file — it contains all your data including photos and can be used to restore your work on any device.</div></div>
+          <div class="inst-step"><div class="inst-num">7</div><div><strong>Return next year</strong> — Import your saved CSV on the <strong>Import</strong> tab. In Report & Map, click <strong>Start new survey year</strong> — all fixtures carry over and you update only what has changed. The report will show year-over-year improvements.</div></div>
+        </div>
       </div>
-      <div id="and-inst" class="hidden">
-        <div class="inst-step"><div class="inst-num">1</div><div>Open the <strong>Camera</strong> app and tap the <strong>Settings gear</strong>.</div></div>
-        <div class="inst-step"><div class="inst-num">2</div><div>Enable <strong>Location tags / GPS location / Save location</strong>.</div></div>
-        <div class="inst-step"><div class="inst-num">3</div><div>Grant Camera <strong>Location permission</strong> when prompted.</div></div>
-        <div class="inst-step"><div class="inst-num">4</div><div>On Google Photos, use <strong>Upload original quality</strong> to preserve EXIF.</div></div>
+      <div class="card">
+        <div class="ct"><i class="ti ti-moon-stars"></i> RASC 5-principle framework</div>
+        <div style="display:grid;gap:.5rem" id="principles-list"></div>
       </div>
     </div>
-    <div class="card">
-      <div class="ct"><i class="ti ti-moon-stars"></i> RASC 5-principle framework</div>
-      <div style="display:grid;gap:.5rem" id="principles-list"></div>
-    </div>
-    <div class="card">
-      <div class="ct"><i class="ti ti-wave-sine"></i> Spectrum tools</div>
-      <p style="font-size:12px;color:var(--color-text-secondary,#666);margin-bottom:.65rem">Screenshot from any of these apps and upload to the fixture's spectrum slot:</p>
-      <div style="display:grid;gap:.4rem;font-size:12px">
-        <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>Spectroid</strong> (Android, free) — real-time spectrogram</div>
-        <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>Spectrometer+</strong> (iOS) — camera-based light spectrum</div>
-        <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>USB spectrometer software</strong> (Ocean Optics, Hamamatsu) — export as PNG/JPG</div>
-        <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>Any SPD or CCT/CRI data screenshot</strong> from a calibrated meter</div>
+
+    <!-- Field reference -->
+    <div id="help-fields" class="hidden">
+      <div class="card">
+        <div class="ct"><i class="ti ti-forms"></i> Field-by-field reference</div>
+        <div style="display:grid;gap:1rem">
+
+          <div><div style="font-size:12px;font-weight:500;color:var(--ct);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:.5px solid rgba(0,0,0,.08)">Site fields</div>
+          <div style="display:grid;gap:.5rem;font-size:12px">
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Site name</strong><span style="color:var(--color-text-secondary,#666)">The name of the property or dark sky site being surveyed. Be consistent year to year.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Lighting zone</strong><span style="color:var(--color-text-secondary,#666)">LZ0 = intrinsically dark (wilderness, DSR). LZ1 = low (developed area in DSS). LZ2 = moderate (rural). LZ3 = suburban.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Survey date</strong><span style="color:var(--color-text-secondary,#666)">Date the survey was conducted. Used for year-over-year tracking.</span></div>
+          </div></div>
+
+          <div><div style="font-size:12px;font-weight:500;color:var(--ct);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:.5px solid rgba(0,0,0,.08)">Fixture identity</div>
+          <div style="display:grid;gap:.5rem;font-size:12px">
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Fixture ID</strong><span style="color:var(--color-text-secondary,#666)">Your reference label, e.g. F-01, P-03. Use a system that matches your site map if you have one.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Location / area</strong><span style="color:var(--color-text-secondary,#666)">Where the fixture is — building name, area, or landmark. e.g. "Main entrance", "Parking lot north".</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Purpose / target</strong><span style="color:var(--color-text-secondary,#666)">What the light is for. Choose the closest match from the dropdown. This relates to the RASC "Need" and "Target" principles.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Activity level</strong><span style="color:var(--color-text-secondary,#666)">How intensively the area is used. Low (~22 lux min): parking, paths. High (~54 lux min): main entries. Visual task: work areas requiring specific illumination.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>No. of luminaires</strong><span style="color:var(--color-text-secondary,#666)">How many identical fixtures at this location. If they differ, enter them as separate fixture records.</span></div>
+          </div></div>
+
+          <div><div style="font-size:12px;font-weight:500;color:var(--ct);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:.5px solid rgba(0,0,0,.08)">Luminaire details</div>
+          <div style="display:grid;gap:.5rem;font-size:12px">
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Luminaire type</strong><span style="color:var(--color-text-secondary,#666)">The fixture housing style — wallpack, bollard, roadway arm, spot, etc. Hover the ? for illustrated examples.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Shielding state</strong><span style="color:var(--color-text-secondary,#666)">Fully = all light directed downward, no upward spill. Partially = some upward or sideward spill. Unshielded = bare bulb or globe with light in all directions.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Mounting height</strong><span style="color:var(--color-text-secondary,#666)">Height of the luminaire in metres. Estimate if exact value unknown.</span></div>
+          </div></div>
+
+          <div><div style="font-size:12px;font-weight:500;color:var(--ct);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:.5px solid rgba(0,0,0,.08)">Lamp details</div>
+          <div style="display:grid;gap:.5rem;font-size:12px">
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Lamp type</strong><span style="color:var(--color-text-secondary,#666)">The light source technology. LED – Amber/PC Amber is best for dark sky. Metal halide and cool LEDs are worst. Hover ? for ranked guidance.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>CCT (K)</strong><span style="color:var(--color-text-secondary,#666)">Correlated Colour Temperature in Kelvin. ≤2200K = best practice (amber). ≤2700K = acceptable. 3000K+ = not recommended. 4000K+ = harmful blue-rich light. Check the lamp or fixture label, or measure with a spectrometer.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Watts</strong><span style="color:var(--color-text-secondary,#666)">Energy input in watts. Found on the lamp or driver label. Used to calculate total site energy consumption.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Lumens</strong><span style="color:var(--color-text-secondary,#666)">Light output in lumens. Found on the lamp label. Optional but useful for calculating illuminance levels.</span></div>
+          </div></div>
+
+          <div><div style="font-size:12px;font-weight:500;color:var(--ct);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:.5px solid rgba(0,0,0,.08)">Control & compliance</div>
+          <div style="display:grid;gap:.5rem;font-size:12px">
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>When needed</strong><span style="color:var(--color-text-secondary,#666)">When the light is actually required. "All night" is rarely justified — most sites can use dusk-to-curfew or motion-activated schedules.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Control type</strong><span style="color:var(--color-text-secondary,#666)">How the light is switched. Motion sensor and photosensor are preferred for dark sky. Manual switch with no timer is least preferred.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Operable?</strong><span style="color:var(--color-text-secondary,#666)">Is the fixture currently working? Record "Broken – TBD" for fixtures that need attention — they should be flagged for follow-up.</span></div>
+            <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:.5rem;background:var(--cgl);border-radius:6px"><strong>Compliant?</strong><span style="color:var(--color-text-secondary,#666)">Does the fixture meet all five RASC principles? Yes / No / To be determined. Use TBD for fixtures where you need more information before deciding.</span></div>
+          </div></div>
+
+        </div>
       </div>
     </div>
-    <div class="card">
-      <div class="ct"><i class="ti ti-database"></i> Data & storage</div>
-      <p style="font-size:12px;color:var(--color-text-secondary,#666);line-height:1.8">Data is stored in your browser's local storage. Use <strong>Export CSV</strong> regularly to back up your work. Photos and spectra are stored as base64 — roughly 0.5–2 MB per image.<br><br>
-      For multi-user or hosted use, see the <a href="https://github.com/rasc-lpa/dark-sky-lighting-inventory" style="color:var(--ct)">GitHub repository</a> for deployment options including Google Sheets integration and PWA packaging.</p>
+
+    <!-- GPS setup -->
+    <div id="help-gps" class="hidden">
+      <div class="card">
+        <div class="ct"><i class="ti ti-map-pin"></i> Enabling GPS in photos</div>
+        <div class="os-tabs"><button class="os-tab active" id="ios-btn" onclick="S.showOS('ios')"><i class="ti ti-brand-apple"></i> iOS</button><button class="os-tab" id="and-btn" onclick="S.showOS('android')"><i class="ti ti-brand-android"></i> Android</button></div>
+        <div id="ios-inst">
+          <div class="inst-step"><div class="inst-num">1</div><div>Open <strong>Settings</strong> on your iPhone or iPad.</div></div>
+          <div class="inst-step"><div class="inst-num">2</div><div>Tap <strong>Privacy & Security → Location Services</strong>. Ensure it is <strong>On</strong>.</div></div>
+          <div class="inst-step"><div class="inst-num">3</div><div>Find <strong>Camera</strong> in the app list → set to <strong>While Using the App</strong>.</div></div>
+          <div class="inst-step"><div class="inst-num">4</div><div>Take photos with the Camera app — GPS embeds automatically.</div></div>
+          <div style="margin-top:.65rem;padding:.65rem;background:var(--cal);border-radius:7px;font-size:11px;color:var(--ca)"><i class="ti ti-alert-triangle"></i> When sharing photos, choose <strong>Original</strong> quality to preserve EXIF data. Screenshots do not contain GPS.</div>
+        </div>
+        <div id="and-inst" class="hidden">
+          <div class="inst-step"><div class="inst-num">1</div><div>Open the <strong>Camera</strong> app and tap the <strong>Settings gear</strong>.</div></div>
+          <div class="inst-step"><div class="inst-num">2</div><div>Enable <strong>Location tags / GPS location / Save location</strong>.</div></div>
+          <div class="inst-step"><div class="inst-num">3</div><div>Grant Camera <strong>Location permission</strong> when prompted.</div></div>
+          <div class="inst-step"><div class="inst-num">4</div><div>On Google Photos, use <strong>Upload original quality</strong> to preserve EXIF when transferring.</div></div>
+          <div style="margin-top:.65rem;padding:.65rem;background:var(--cal);border-radius:7px;font-size:11px;color:var(--ca)"><i class="ti ti-alert-triangle"></i> On Samsung devices look for "Location tags" in Camera settings. On Pixel devices check Camera permissions in Android Settings.</div>
+        </div>
+      </div>
     </div>
+
+    <!-- Spectrum -->
+    <div id="help-spectrum" class="hidden">
+      <div class="card">
+        <div class="ct"><i class="ti ti-wave-sine"></i> Spectrum data</div>
+        <p style="font-size:12px;color:var(--color-text-secondary,#666);margin-bottom:.75rem;line-height:1.7">A spectrum screenshot shows the spectral power distribution (SPD) of the light source — essentially how much energy the lamp emits at each wavelength. Blue-rich light (peaks around 450–480 nm) is most harmful to dark skies and wildlife. Amber and warm-white sources have minimal blue content.</p>
+        <div style="font-size:12px;font-weight:500;margin-bottom:.5rem">How to capture a spectrum</div>
+        <div class="inst-step"><div class="inst-num">1</div><div>Download a spectrometer app on your phone (see list below).</div></div>
+        <div class="inst-step"><div class="inst-num">2</div><div>Point the phone camera at the luminaire from a safe distance.</div></div>
+        <div class="inst-step"><div class="inst-num">3</div><div>Take a screenshot of the spectrum display showing the full SPD curve.</div></div>
+        <div class="inst-step"><div class="inst-num">4</div><div>Upload the screenshot to the fixture's <strong>Spectrum screenshot</strong> slot in the Photos & Spectra tab.</div></div>
+        <div style="font-size:12px;font-weight:500;margin-top:.75rem;margin-bottom:.5rem">Recommended apps</div>
+        <div style="display:grid;gap:.4rem;font-size:12px">
+          <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>Spectroid</strong> (Android, free) — real-time audio/light spectrogram. Best free option.</div>
+          <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>Spectrometer+</strong> (iOS, paid) — camera-based light spectrum with CCT reading.</div>
+          <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>USB spectrometer</strong> (e.g. Ocean Optics, Hamamatsu) — export SPD chart as PNG/JPG.</div>
+          <div style="padding:.5rem .75rem;background:var(--cgl);border-radius:6px"><strong>Any CCT/CRI meter screenshot</strong> — if you have a calibrated light meter that shows colour data, a screenshot of its display is useful.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data & backup -->
+    <div id="help-data" class="hidden">
+      <div class="card">
+        <div class="ct"><i class="ti ti-database"></i> Data & backup</div>
+        <div style="display:grid;gap:.75rem;font-size:12px;color:var(--color-text-secondary,#666);line-height:1.7">
+          <div><strong style="color:var(--color-text-primary,#1a1a1a)">Where is my data stored?</strong><br>All data — site info, fixture records, photos, and spectra — is stored in your browser's local storage. It stays on your device and is not sent anywhere. Different browsers on the same computer have separate storage.</div>
+          <div><strong style="color:var(--color-text-primary,#1a1a1a)">How do I back up my data?</strong><br>Go to <strong>Report & Map</strong>, select your site, and click <strong>CSV</strong>. Save the file somewhere safe — a shared drive, email to yourself, or cloud storage. The CSV contains everything including photos (as base64 image data).</div>
+          <div><strong style="color:var(--color-text-primary,#1a1a1a)">How do I restore my data on a new device or browser?</strong><br>Go to the <strong>Import</strong> tab, click <strong>Import CSV</strong>, and upload your saved CSV file. The site and all fixtures will be recreated automatically including photos and spectra.</div>
+          <div><strong style="color:var(--color-text-primary,#1a1a1a)">How large can my data get?</strong><br>Browsers allow roughly 5–10 MB of local storage. Photos are resized to max 1200px (~100–200 KB each) on upload, so you can store around 30–50 photos before approaching limits. Export CSV regularly to stay safe.</div>
+          <div><strong style="color:var(--color-text-primary,#1a1a1a)">Can I share data with my team?</strong><br>Export CSV and send it to a colleague. They import it on the Import tab. Currently the tool is single-user per browser — a hosted multi-user version is on the roadmap. See the <a href="https://github.com/rasc-lpa/dark-sky-lighting-inventory" style="color:var(--ct)">GitHub repository</a> for details.</div>
+          <div><strong style="color:var(--color-text-primary,#1a1a1a)">Can I use the CSV in Excel?</strong><br>Yes — open Excel, go to Data → From Text/CSV, and import the file. The photo columns contain long base64 strings which Excel will show but won't render as images. For viewing photos, use the tool's lightbox view.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div id="help-trouble" class="hidden">
+      <div class="card">
+        <div class="ct"><i class="ti ti-tool"></i> Troubleshooting</div>
+        <div style="display:grid;gap:.75rem;font-size:12px">
+          <details style="border:.5px solid rgba(0,0,0,.1);border-radius:7px;padding:.65rem">
+            <summary style="font-weight:500;cursor:pointer;color:var(--color-text-primary,#1a1a1a)">The page looks outdated or tabs don't work after an update</summary>
+            <div style="margin-top:.5rem;color:var(--color-text-secondary,#666);line-height:1.7">Your browser has cached an old version. Press <strong>Ctrl+Shift+R</strong> (Windows/Linux) or <strong>Cmd+Shift+R</strong> (Mac) for a hard refresh. On Opera use <strong>Ctrl+F5</strong>. If that doesn't work, clear your browser cache via Settings → Privacy → Clear browsing data → Cached images and files.</div>
+          </details>
+          <details style="border:.5px solid rgba(0,0,0,.1);border-radius:7px;padding:.65rem">
+            <summary style="font-weight:500;cursor:pointer;color:var(--color-text-primary,#1a1a1a)">GPS coordinates are not being extracted from my photos</summary>
+            <div style="margin-top:.5rem;color:var(--color-text-secondary,#666);line-height:1.7">Check that location access is enabled for your camera app (see GPS Setup). Screenshots never contain GPS — you must use the Camera app directly. When transferring photos, use original quality — compressed/resized versions strip EXIF data. Some third-party camera apps don't embed GPS even with permissions granted; use the default iOS or Android Camera app.</div>
+          </details>
+          <details style="border:.5px solid rgba(0,0,0,.1);border-radius:7px;padding:.65rem">
+            <summary style="font-weight:500;cursor:pointer;color:var(--color-text-primary,#1a1a1a)">My data disappeared after clearing my browser</summary>
+            <div style="margin-top:.5rem;color:var(--color-text-secondary,#666);line-height:1.7">Clearing browser data removes local storage. This is why regular CSV exports are important. If you have a recent CSV export, import it on the Import tab to restore your data. Going forward, export CSV after every session.</div>
+          </details>
+          <details style="border:.5px solid rgba(0,0,0,.1);border-radius:7px;padding:.65rem">
+            <summary style="font-weight:500;cursor:pointer;color:var(--color-text-primary,#1a1a1a)">Photos aren't saving or the tool runs slowly with many photos</summary>
+            <div style="margin-top:.5rem;color:var(--color-text-secondary,#666);line-height:1.7">Photos are resized to max 1200px on upload, but if you have many fixtures with multiple photos, local storage can fill up. Export CSV to back up and free up storage. If the tool is unresponsive, try a different browser — Chrome and Edge generally handle large local storage better than Firefox or Safari.</div>
+          </details>
+          <details style="border:.5px solid rgba(0,0,0,.1);border-radius:7px;padding:.65rem">
+            <summary style="font-weight:500;cursor:pointer;color:var(--color-text-primary,#1a1a1a)">CSV import says "No rows to import" or nothing happens</summary>
+            <div style="margin-top:.5rem;color:var(--color-text-secondary,#666);line-height:1.7">Make sure you click <strong>Import CSV</strong> first to show the upload zone, then upload the file. The tool expects a CSV exported from this tool (with "Site Name" as the first column) or an older RASC format. Excel files (.xlsx) are not supported — save as CSV first in Excel via File → Save As → CSV UTF-8.</div>
+          </details>
+          <details style="border:.5px solid rgba(0,0,0,.1);border-radius:7px;padding:.65rem">
+            <summary style="font-weight:500;cursor:pointer;color:var(--color-text-primary,#1a1a1a)">The fixture map shows no pins</summary>
+            <div style="margin-top:.5rem;color:var(--color-text-secondary,#666);line-height:1.7">The map only shows fixtures that have GPS coordinates. Upload a geo-tagged photo (with GPS enabled on your camera) or use the "Capture GPS now" button inside the fixture edit form. The GPS button requires browser location permission — allow it when prompted.</div>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <!-- Changelog -->
+    <div id="help-changelog" class="hidden">
+      <div class="card">
+        <div class="ct"><i class="ti ti-history"></i> Changelog</div>
+        <div style="display:grid;gap:.75rem;font-size:12px">
+          <div style="border-left:3px solid var(--ct);padding-left:.75rem">
+            <div style="font-weight:500;margin-bottom:.25rem">v2.2 <span style="font-weight:400;color:var(--color-text-secondary,#666)">— Current</span></div>
+            <div style="color:var(--color-text-secondary,#666);line-height:1.7">Added getting-started walkthrough on Sites tab. Expanded Guide into full Help tab with quick start, field reference, GPS setup, spectrum guide, data/backup FAQ, troubleshooting, and changelog.</div>
+          </div>
+          <div style="border-left:3px solid rgba(0,0,0,.1);padding-left:.75rem">
+            <div style="font-weight:500;margin-bottom:.25rem">v2.1</div>
+            <div style="color:var(--color-text-secondary,#666);line-height:1.7">Added version number to title bar and header.</div>
+          </div>
+          <div style="border-left:3px solid rgba(0,0,0,.1);padding-left:.75rem">
+            <div style="font-weight:500;margin-bottom:.25rem">v2.0</div>
+            <div style="color:var(--color-text-secondary,#666);line-height:1.7">Image resizing on upload — photos compressed to max 1200px / 82% JPEG quality. EXIF GPS extracted before resize. Spectrum screenshots resized to 1200px / 88% quality.</div>
+          </div>
+          <div style="border-left:3px solid rgba(0,0,0,.1);padding-left:.75rem">
+            <div style="font-weight:500;margin-bottom:.25rem">v1.9</div>
+            <div style="color:var(--color-text-secondary,#666);line-height:1.7">Fixed import syntax error caused by embedding large base64 data in onclick attributes. Import data now stored in JS variable.</div>
+          </div>
+          <div style="border-left:3px solid rgba(0,0,0,.1);padding-left:.75rem">
+            <div style="font-weight:500;margin-bottom:.25rem">v1.8</div>
+            <div style="color:var(--color-text-secondary,#666);line-height:1.7">Full CSV round-trip: site name, zone, address, surveyor, and email now included in every export row. Import auto-creates or merges sites from CSV. Photos and spectra restored from base64 on import.</div>
+          </div>
+          <div style="border-left:3px solid rgba(0,0,0,.1);padding-left:.75rem">
+            <div style="font-weight:500;margin-bottom:.25rem">v1.7</div>
+            <div style="color:var(--color-text-secondary,#666);line-height:1.7">Jump-to-fixture button in report table. Clicking → switches to Inventory tab, scrolls to the card, and highlights it with a green glow.</div>
+          </div>
+          <div style="border-left:3px solid rgba(0,0,0,.1);padding-left:.75rem">
+            <div style="font-weight:500;margin-bottom:.25rem">v1.6 and earlier</div>
+            <div style="color:var(--color-text-secondary,#666);line-height:1.7">Inline photos and spectrum on fixture cards. Clickable lightbox on photos and spectra. Cleaner Photos & Spectra tab layout. EXIF geolocation from uploaded photos. Year-over-year comparison. SVG fixture map. Illustrated tooltips on form fields. CSV import/export. PWA offline support.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div><!-- /main -->
@@ -260,6 +484,6 @@ td{padding:4px 6px;font-size:11px;border-bottom:.5px solid rgba(0,0,0,.06)}
   <button class="btn btn-s" style="background:none;color:rgba(255,255,255,.7);border:none" onclick="document.getElementById('install-banner').style.display='none'">✕</button>
 </div>
 
-<script src="src/app.js?v=2.1"></script>
+<script src="src/app.js?v=2.2"></script>
 </body>
 </html>

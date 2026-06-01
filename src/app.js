@@ -64,6 +64,36 @@ const TIPS = {
       { label: 'Fluorescent / CFL',    col: '#BA7517', desc: 'Moderate. CCT and mercury content are concerns.' }
     ]
   },
+  whenNeeded: {
+    title: 'When is light needed?',
+    text: 'Lighting should only be on when people are present and need it.',
+    items: [
+      { label: 'All night',        col: '#A32D2D', desc: 'Only for sites with genuine overnight security needs.' },
+      { label: 'Dusk to curfew',   col: '#BA7517', desc: 'Good — reduces light during low-use hours.' },
+      { label: 'Motion-activated', col: '#0F6E56', desc: 'Best — light only when someone is present.' },
+      { label: 'Event only',       col: '#0F6E56', desc: 'Ideal for sports fields and seasonal facilities.' }
+    ]
+  },
+  control: {
+    title: 'Control type',
+    text: 'Controls reduce unnecessary light. Motion sensors and photosensors are best for dark sky compliance.',
+    items: [
+      { label: 'Motion sensor',      col: '#0F6E56', desc: 'Best — activates only when someone is present.' },
+      { label: 'Photosensor',        col: '#0F6E56', desc: 'Good — turns off automatically at dawn.' },
+      { label: 'Programmable timer', col: '#0F6E56', desc: 'Good — can shut off after midnight.' },
+      { label: 'Manual switch',      col: '#A32D2D', desc: 'Least preferred — relies on human action.' },
+      { label: 'None',               col: '#A32D2D', desc: 'Always on when powered — not acceptable for dark sky.' }
+    ]
+  },
+  compliant: {
+    title: 'Compliance assessment',
+    text: 'Compliant means the fixture satisfies all five RASC principles: Need, Target, Quantity, Colour (≤2700K), and Control.',
+    items: [
+      { label: 'Yes',              col: '#0F6E56', desc: 'Meets all five principles.' },
+      { label: 'No',               col: '#A32D2D', desc: 'Fails one or more. Note the reason in Comments.' },
+      { label: 'To be determined', col: '#BA7517', desc: 'Awaiting more info — e.g. CCT unknown, owner not consulted.' }
+    ]
+  },
   zone: {
     title: 'Lighting zones (LZ)',
     text: 'Defines the ambient light level expected in the area. Dark sky sites are typically LZ0 or LZ1.',
@@ -130,13 +160,13 @@ document.getElementById('nav').addEventListener('click', e => {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const t = btn.dataset.tab;
-  ['sites','inventory','photos','report','import','guide'].forEach(id =>
+  ['sites','inventory','photos','report','import','help'].forEach(id =>
     document.getElementById('tab-' + id).classList.toggle('hidden', id !== t));
   if (t === 'inventory') S.renderInv();
   if (t === 'photos')  { S.fillSels(); if (D.cur) S.loadPhotoTab(D.cur); }
   if (t === 'report')  { S.fillSels(); if (D.cur) S.loadReport(D.cur); }
   if (t === 'import')  S.initImport();
-  if (t === 'guide')   S.renderGuide();
+  if (t === 'help')    S.renderGuide();
 });
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -357,10 +387,10 @@ const S = {
       <details open style="margin-bottom:.7rem;border:.5px solid rgba(0,0,0,.1);border-radius:8px;padding:.65rem">
         <summary><span class="chev">›</span> Control & compliance</summary>
         <div class="fg" style="margin-top:.7rem">
-          <div class="fgi"><label>When needed</label><select id="fi-when"><option value="">—</option>${sel(WHEN, f.whenNeeded)}</select></div>
-          <div class="fgi"><label>Control type</label><select id="fi-ctrl"><option value="">—</option>${sel(CONTROLS, f.control)}</select></div>
+          <div class="fgi"><label>${mkTip('whenNeeded','When needed')}</label><select id="fi-when"><option value="">—</option>${sel(WHEN, f.whenNeeded)}</select></div>
+          <div class="fgi"><label>${mkTip('control','Control type')}</label><select id="fi-ctrl"><option value="">—</option>${sel(CONTROLS, f.control)}</select></div>
           <div class="fgi"><label>Operable?</label><select id="fi-op"><option value="">—</option>${sel(['Yes','No','Broken – TBD','Unknown'], f.operable)}</select></div>
-          <div class="fgi"><label>Compliant?</label><select id="fi-comp"><option value="">—</option>${sel(['Yes','No','To be determined'], f.compliant)}</select></div>
+          <div class="fgi"><label>${mkTip('compliant','Compliant?')}</label><select id="fi-comp"><option value="">—</option>${sel(['Yes','No','To be determined'], f.compliant)}</select></div>
         </div>
       </details>
       <details style="margin-bottom:.7rem;border:.5px solid rgba(0,0,0,.1);border-radius:8px;padding:.65rem">
@@ -899,9 +929,28 @@ const S = {
   // ── GUIDE ─────────────────────────────────────────────────────────────────
 
   renderGuide() {
-    document.getElementById('principles-list').innerHTML = PRINCIPLES.map(p =>
+    const pl = document.getElementById('principles-list');
+    if (pl) pl.innerHTML = PRINCIPLES.map(p =>
       `<div style="display:flex;gap:9px;padding:.6rem;background:var(--cgl);border-radius:7px"><div style="width:26px;height:26px;background:${p[1]};color:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:500;font-size:11px">${p[0]}</div><div><strong style="font-size:12px">${p[2]}</strong><br><span style="font-size:11px;color:var(--color-text-secondary,#666)">${p[3]}</span></div></div>`
     ).join('');
+    S.showHelpSection('quickstart', document.querySelector('#tab-help .os-tab'));
+    const gs = document.getElementById('getting-started');
+    if (gs) gs.classList.toggle('hidden', !!localStorage.getItem('dsky_walkthrough_dismissed'));
+  },
+
+  showHelpSection(section, btn) {
+    ['quickstart','fields','gps','spectrum','data','trouble','changelog'].forEach(s => {
+      const el = document.getElementById('help-' + s);
+      if (el) el.classList.toggle('hidden', s !== section);
+    });
+    document.querySelectorAll('#tab-help .os-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+  },
+
+  dismissWalkthrough() {
+    localStorage.setItem('dsky_walkthrough_dismissed', '1');
+    const gs = document.getElementById('getting-started');
+    if (gs) gs.classList.add('hidden');
   },
 
   showOS(os) {
@@ -927,6 +976,8 @@ loadData();
 S.renderSites();
 S.fillSels();
 S.renderGuide();
+const gs = document.getElementById('getting-started');
+if (gs) gs.classList.toggle('hidden', !!localStorage.getItem('dsky_walkthrough_dismissed'));
 
 // PWA install prompt
 window.addEventListener('beforeinstallprompt', e => {
