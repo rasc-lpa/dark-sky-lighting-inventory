@@ -663,10 +663,21 @@ const S = {
   exportCSV() {
     const site = D.sites[D.cur]; if (!site) { alert('Select a site.'); return; }
     const yr   = S.currentYr(), fx = site.surveys[yr] ? site.surveys[yr].fixtures : [];
-    const h    = ['Survey Year','Fixture ID','Zone','Location','Purpose','Activity','Num Luminaires','Lamps/Luminaire','Luminaire Type','Shielding','Mount Height (m)','Lamp Type','CCT (K)','Watts','Lumens','When Needed','Control','Operable','Compliant','Geo Lat','Geo Lon','Geo Accuracy (m)','Geo Source','Photo Count','Photo 1 (base64)','Photo 2 (base64)','Photo 3 (base64)','Spectrum (base64)','Notes'];
+    // Site-level columns are repeated on every row so the CSV is fully self-contained
+    const h    = ['Site Name','Site Zone','Site Address','Surveyor','Surveyor Email','Survey Year','Fixture ID','Fixture Zone','Location','Purpose','Activity','Num Luminaires','Lamps/Luminaire','Luminaire Type','Shielding','Mount Height (m)','Lamp Type','CCT (K)','Watts','Lumens','When Needed','Control','Operable','Compliant','Geo Lat','Geo Lon','Geo Accuracy (m)','Geo Source','Photo Count','Photo 1 (base64)','Photo 2 (base64)','Photo 3 (base64)','Spectrum (base64)','Notes'];
     const rows = fx.map(f => {
       const photos = f.photos || [];
-      const row = [yr, f.fixId, f.zone, f.location, f.purpose, f.activity, f.numLuminaires, f.lampsPerLum, f.lumType, f.shielding, f.mountHeight, f.lampType, f.cct, f.watts, f.lumens, f.whenNeeded, f.control, f.operable, f.compliant, f.geoLat ? f.geoLat.toFixed(6) : '', f.geoLon ? f.geoLon.toFixed(6) : '', f.geoAccuracy ? Math.round(f.geoAccuracy) : '', f.geoSrc || '', photos.length, photos[0] ? photos[0].data : '', photos[1] ? photos[1].data : '', photos[2] ? photos[2].data : '', f.spectrum ? f.spectrum.data : '', f.notes];
+      const row = [
+        site.name, site.zone, site.addr, site.surv, site.email, yr,
+        f.fixId, f.zone, f.location, f.purpose, f.activity, f.numLuminaires, f.lampsPerLum,
+        f.lumType, f.shielding, f.mountHeight, f.lampType, f.cct, f.watts, f.lumens,
+        f.whenNeeded, f.control, f.operable, f.compliant,
+        f.geoLat ? f.geoLat.toFixed(6) : '', f.geoLon ? f.geoLon.toFixed(6) : '',
+        f.geoAccuracy ? Math.round(f.geoAccuracy) : '', f.geoSrc || '',
+        photos.length,
+        photos[0] ? photos[0].data : '', photos[1] ? photos[1].data : '', photos[2] ? photos[2].data : '',
+        f.spectrum ? f.spectrum.data : '', f.notes
+      ];
       return row.map(v => '"' + (v || '').toString().replace(/"/g, '""') + '"');
     });
     const csv  = [h.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -707,51 +718,112 @@ const S = {
         r.push(cur.trim()); return r;
       };
       const hdr = parse(lines[0]), rows = lines.slice(1).map(parse);
-      const isLegacy = hdr[0] && hdr[0].toLowerCase().includes('fixture id');
-      const COL = { yr:0,fixId:1,zone:2,loc:3,pur:4,act:5,num:6,lpl:7,lt:8,sh:9,ht:10,lamp:11,cct:12,w:13,lm:14,when:15,ctrl:16,op:17,comp:18,lat:19,lon:20,acc:21,gsrc:22 };
+      // Detect format: new format has 'Site Name' as first column; legacy has 'Fixture ID'
+      const isNew    = hdr[0] && hdr[0].toLowerCase().includes('site name');
+      const isLegacy = !isNew && hdr[0] && hdr[0].toLowerCase().includes('fixture id');
+      // Column maps
+      const CNEW  = { siteName:0,siteZone:1,siteAddr:2,siteSurv:3,siteEmail:4,yr:5,fixId:6,zone:7,loc:8,pur:9,act:10,num:11,lpl:12,lt:13,sh:14,ht:15,lamp:16,cct:17,w:18,lm:19,when:20,ctrl:21,op:22,comp:23,lat:24,lon:25,acc:26,gsrc:27,photoCt:28,p1:29,p2:30,p3:31,spec:32,notes:33 };
+      const CLEGACY = { fixId:0,zone:1,loc:2,pur:3,act:4,num:5,lpl:6,lt:7,sh:8,ht:9,lamp:10,cct:11,w:12,lm:13,when:14,ctrl:15,op:16,comp:17 };
+      const COLD  = { yr:0,fixId:1,zone:2,loc:3,pur:4,act:5,num:6,lpl:7,lt:8,sh:9,ht:10,lamp:11,cct:12,w:13,lm:14,when:15,ctrl:16,op:17,comp:18,lat:19,lon:20,acc:21,gsrc:22 };
       const imported = rows.map((r, i) => {
         if (!r || r.length < 4) return null;
-        const g = (k, fallback = '') => (isLegacy ? r[COL[k]] : r[COL[k]]) || fallback;
-        const fixture = { r: i + 2,
-          yr: g('yr'), fixId: g('fixId'), zone: g('zone'), loc: g('loc'), pur: g('pur'), act: g('act'),
+        let C = isNew ? CNEW : isLegacy ? CLEGACY : COLD;
+        const g = (k, fb = '') => (r[C[k]] || fb);
+        const photos = [];
+        if (isNew) {
+          if (g('p1').startsWith('data:')) photos.push({ data: g('p1'), name: 'photo1', addedAt: Date.now() });
+          if (g('p2').startsWith('data:')) photos.push({ data: g('p2'), name: 'photo2', addedAt: Date.now() });
+          if (g('p3').startsWith('data:')) photos.push({ data: g('p3'), name: 'photo3', addedAt: Date.now() });
+        }
+        const specData = isNew && g('spec').startsWith('data:') ? { data: g('spec'), name: 'spectrum', addedAt: Date.now() } : null;
+        const fixture = {
+          r: i + 2,
+          siteName: isNew ? g('siteName') : '', siteZone: isNew ? g('siteZone') : '',
+          siteAddr: isNew ? g('siteAddr') : '', siteSurv: isNew ? g('siteSurv') : '',
+          siteEmail: isNew ? g('siteEmail') : '',
+          yr: isNew ? g('yr') : isLegacy ? '' : g('yr'),
+          fixId: g('fixId'), zone: g('zone'), loc: g('loc'), pur: g('pur'), act: g('act'),
           num: parseInt(g('num')) || 1, lpl: parseInt(g('lpl')) || 1, lt: g('lt'), sh: g('sh'),
           ht: parseFloat(g('ht')) || null, lamp: g('lamp'), cct: parseInt(g('cct')) || null,
           w: parseFloat(g('w')) || null, lm: parseInt(g('lm')) || null,
           when: g('when'), ctrl: g('ctrl'), op: g('op'), comp: g('comp'),
           lat: parseFloat(g('lat')) || null, lon: parseFloat(g('lon')) || null,
-          acc: parseFloat(g('acc')) || null, gsrc: g('gsrc'), warn: []
+          acc: parseFloat(g('acc')) || null, gsrc: g('gsrc'),
+          photos, spectrum: specData, notes: isNew ? g('notes') : '',
+          warn: []
         };
         if (fixture.cct && fixture.cct > 2700) fixture.warn.push('CCT>2700K');
         if (!fixture.sh) fixture.warn.push('no shielding data');
         return fixture;
       }).filter(Boolean);
 
+      // Detect site info from first row (new format)
+      const firstRow   = imported[0] || {};
+      const detectedSite = firstRow.siteName || '';
+      const detectedYr   = firstRow.yr || new Date().getFullYear();
+      const existingSite = Object.values(D.sites).find(s => s.name === detectedSite);
+      const photoCount   = imported.filter(r => r.photos && r.photos.length).length;
+      const specCount    = imported.filter(r => r.spectrum).length;
+
       const preview = document.getElementById('csv-preview');
       preview.classList.remove('hidden');
-      preview.innerHTML = `<div style="font-size:12px;font-weight:500;margin-bottom:.5rem">${imported.length} rows found${isLegacy ? ' (RASC legacy format)' : ''}</div>
-        ${imported.slice(0, 10).map(r => `<div class="imp-row"><span style="color:var(--color-text-secondary,#666);min-width:40px">row ${r.r}</span><span class="${r.warn.length ? 'imp-warn' : 'imp-ok'}">${r.fixId || '(no ID)'}</span><span style="color:var(--color-text-secondary,#666)">${r.pur || '—'} · ${r.cct ? r.cct + 'K' : '—'} · ${r.sh || '—'} ${r.warn.length ? '⚠ ' + r.warn.join(', ') : ''}</span></div>`).join('')}
-        ${imported.length > 10 ? `<div style="font-size:10px;color:var(--color-text-secondary,#666);margin-top:4px">…and ${imported.length - 10} more</div>` : ''}
-        <div style="margin-top:.75rem;display:flex;gap:6px;flex-wrap:wrap">
-          <select id="imp-csv-site" style="font-size:12px;padding:4px 8px;border-radius:6px;border:.5px solid rgba(0,0,0,.2)"><option value="">Select target site…</option>${Object.values(D.sites).map(s => `<option value="${s.id}">${s.name}</option>`).join('')}</select>
-          <input type="number" id="imp-csv-yr" placeholder="Year" value="${imported[0] && imported[0].yr || new Date().getFullYear()}" style="width:80px;font-size:12px;padding:4px 8px;border-radius:6px;border:.5px solid rgba(0,0,0,.2)">
-          <button class="btn btn-p btn-s" onclick="S.doImport(${JSON.stringify(imported).replace(/</g, '\\x3c')})"><i class="ti ti-check"></i> Import ${imported.length} fixtures</button>
+      preview.innerHTML = `
+        <div style="font-size:12px;font-weight:500;margin-bottom:.5rem">
+          ${imported.length} fixtures found
+          ${isNew ? '— full format (site + images)' : isLegacy ? '— RASC legacy format' : '— standard format'}
+          ${photoCount ? ` · ${photoCount} with photos` : ''}
+          ${specCount ? ` · ${specCount} with spectra` : ''}
+        </div>
+        ${detectedSite ? `<div class="al as" style="margin-bottom:.5rem"><i class="ti ti-building" style="flex-shrink:0"></i><span>Site detected: <strong>${detectedSite}</strong>${existingSite ? ' — will merge into existing site' : ' — will create new site'}</span></div>` : ''}
+        ${imported.slice(0, 8).map(r => `<div class="imp-row"><span style="color:var(--color-text-secondary,#666);min-width:40px">row ${r.r}</span><span class="${r.warn.length ? 'imp-warn' : 'imp-ok'}">${r.fixId || '(no ID)'}</span><span style="color:var(--color-text-secondary,#666)">${r.pur || '—'} · ${r.cct ? r.cct + 'K' : '—'} · ${r.sh || '—'} ${r.warn.length ? '⚠ ' + r.warn.join(', ') : ''}</span></div>`).join('')}
+        ${imported.length > 8 ? `<div style="font-size:10px;color:var(--color-text-secondary,#666);margin-top:4px">…and ${imported.length - 8} more</div>` : ''}
+        <div style="margin-top:.75rem;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          ${!detectedSite ? `<select id="imp-csv-site" style="font-size:12px;padding:4px 8px;border-radius:6px;border:.5px solid rgba(0,0,0,.2)"><option value="">Select target site…</option>${Object.values(D.sites).map(s => `<option value="${s.id}">${s.name}</option>`).join('')}</select>` : ''}
+          ${!firstRow.yr ? `<input type="number" id="imp-csv-yr" placeholder="Year" value="${new Date().getFullYear()}" style="width:80px;font-size:12px;padding:4px 8px;border-radius:6px;border:.5px solid rgba(0,0,0,.2)">` : ''}
+          <button class="btn btn-p btn-s" onclick="S.doImport(${JSON.stringify(imported).replace(/</g, '\x3c')})"><i class="ti ti-check"></i> Import ${imported.length} fixtures</button>
         </div>`;
     };
     reader.readAsText(file);
   },
 
   doImport(rows) {
-    const sid = document.getElementById('imp-csv-site').value;
-    const yr  = document.getElementById('imp-csv-yr').value.trim();
-    if (!sid) { alert('Select a target site.'); return; }
-    if (!yr)  { alert('Enter a survey year.'); return; }
-    const site = D.sites[sid];
+    if (!rows.length) { alert('No rows to import.'); return; }
+    const first = rows[0];
+    // Determine site — auto from CSV or manual selection
+    let site, sid;
+    if (first.siteName) {
+      // Find existing site by name or create new one
+      site = Object.values(D.sites).find(s => s.name === first.siteName);
+      if (!site) {
+        sid = 's' + Date.now();
+        site = { id: sid, name: first.siteName, zone: first.siteZone, addr: first.siteAddr, surv: first.siteSurv, email: first.siteEmail, surveys: {}, created: Date.now() };
+        D.sites[sid] = site;
+      }
+    } else {
+      const siteEl = document.getElementById('imp-csv-site');
+      sid = siteEl && siteEl.value;
+      if (!sid) { alert('Select a target site.'); return; }
+      site = D.sites[sid];
+    }
+    // Determine year — from CSV or manual input
+    const yrEl = document.getElementById('imp-csv-yr');
+    const yr   = (first.yr) || (yrEl && yrEl.value.trim()) || new Date().getFullYear().toString();
+    if (!yr) { alert('Enter a survey year.'); return; }
     if (!site.surveys) site.surveys = {};
     if (!site.surveys[yr]) site.surveys[yr] = { year: yr, fixtures: [], created: Date.now() };
     rows.forEach(r => {
-      site.surveys[yr].fixtures.push({ id: 'f' + Date.now() + Math.random().toString(36).slice(2), fixId: r.fixId, zone: r.zone, location: r.loc, purpose: r.pur, activity: r.act, numLuminaires: r.num, lampsPerLum: r.lpl, lumType: r.lt, shielding: r.sh, mountHeight: r.ht, lampType: r.lamp, cct: r.cct, watts: r.w, lumens: r.lm, whenNeeded: r.when, control: r.ctrl, operable: r.op, compliant: r.comp, geoLat: r.lat, geoLon: r.lon, geoAccuracy: r.acc, geoSrc: r.gsrc, photos: [], spectrum: null, notes: '' });
+      site.surveys[yr].fixtures.push({
+        id: 'f' + Date.now() + Math.random().toString(36).slice(2),
+        fixId: r.fixId, zone: r.zone, location: r.loc, purpose: r.pur, activity: r.act,
+        numLuminaires: r.num, lampsPerLum: r.lpl, lumType: r.lt, shielding: r.sh,
+        mountHeight: r.ht, lampType: r.lamp, cct: r.cct, watts: r.w, lumens: r.lm,
+        whenNeeded: r.when, control: r.ctrl, operable: r.op, compliant: r.comp,
+        geoLat: r.lat, geoLon: r.lon, geoAccuracy: r.acc, geoSrc: r.gsrc,
+        photos: r.photos || [], spectrum: r.spectrum || null, notes: r.notes || ''
+      });
     });
     site.updated = Date.now(); saveData(); S.renderSites(); S.fillSels();
+    D.cur = site.id;
     alert(`✓ Imported ${rows.length} fixtures into "${site.name}" — ${yr} survey.`);
     document.getElementById('csv-preview').classList.add('hidden');
     document.getElementById('csv-file-in').value = '';
