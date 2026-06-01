@@ -478,6 +478,25 @@ const S = {
     </div>`).join('');
   },
 
+  // Resize image to max 1200px wide/tall, JPEG quality 0.82
+  // Preserves aspect ratio. Returns a Promise resolving to a base64 data URL.
+  resizeImage(dataUrl, maxPx = 1200, quality = 0.82) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w <= maxPx && h <= maxPx) { resolve(dataUrl); return; }
+        if (w > h) { h = Math.round(h * maxPx / w); w = maxPx; }
+        else       { w = Math.round(w * maxPx / h); h = maxPx; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = dataUrl;
+    });
+  },
+
   addPhoto(ev, fid) {
     const site = D.sites[D.cur], yr = S.currentYr();
     const f = site.surveys[yr].fixtures.find(x => x.id === fid);
@@ -487,26 +506,30 @@ const S = {
     files.forEach(file => {
       const reader = new FileReader();
       reader.onload = e => {
-        const data = e.target.result;
-        const obj  = { data, name: file.name, size: file.size, addedAt: Date.now() };
-        try {
-          const img = new Image();
-          img.src = data;
-          img.onload = () => {
-            try {
-              EXIF.getData(img, function () {
-                const la = EXIF.getTag(this, 'GPSLatitude'),  laR = EXIF.getTag(this, 'GPSLatitudeRef');
-                const lo = EXIF.getTag(this, 'GPSLongitude'), loR = EXIF.getTag(this, 'GPSLongitudeRef');
-                if (la && lo) {
-                  obj.lat = dmsToDD(la, laR); obj.lon = dmsToDD(lo, loR);
-                  if (!f.geoLat || f.geoSrc === 'exif') { f.geoLat = obj.lat; f.geoLon = obj.lon; f.geoSrc = 'exif'; }
-                }
-                f.photos.push(obj); done++;
-                if (done === files.length) { site.updated = Date.now(); saveData(); S.loadPhotoTab(D.cur); S.renderInv(); }
-              });
-            } catch { f.photos.push(obj); done++; if (done === files.length) { site.updated = Date.now(); saveData(); S.loadPhotoTab(D.cur); S.renderInv(); } }
-          };
-        } catch { f.photos.push(obj); done++; if (done === files.length) { site.updated = Date.now(); saveData(); S.loadPhotoTab(D.cur); S.renderInv(); } }
+        const rawData = e.target.result;
+        // Extract EXIF before resizing (EXIF is lost after canvas resize)
+        const exifImg = new Image();
+        exifImg.src = rawData;
+        exifImg.onload = () => {
+          let geoLat = null, geoLon = null;
+          try {
+            EXIF.getData(exifImg, function () {
+              const la = EXIF.getTag(this, 'GPSLatitude'),  laR = EXIF.getTag(this, 'GPSLatitudeRef');
+              const lo = EXIF.getTag(this, 'GPSLongitude'), loR = EXIF.getTag(this, 'GPSLongitudeRef');
+              if (la && lo) { geoLat = dmsToDD(la, laR); geoLon = dmsToDD(lo, loR); }
+            });
+          } catch {}
+          // Now resize
+          S.resizeImage(rawData).then(resized => {
+            const obj = { data: resized, name: file.name, size: resized.length, addedAt: Date.now() };
+            if (geoLat) {
+              obj.lat = geoLat; obj.lon = geoLon;
+              if (!f.geoLat || f.geoSrc === 'exif') { f.geoLat = geoLat; f.geoLon = geoLon; f.geoSrc = 'exif'; }
+            }
+            f.photos.push(obj); done++;
+            if (done === files.length) { site.updated = Date.now(); saveData(); S.loadPhotoTab(D.cur); S.renderInv(); }
+          });
+        };
       };
       reader.readAsDataURL(file);
     });
@@ -525,7 +548,12 @@ const S = {
     if (!f) return;
     const file = ev.target.files[0]; if (!file) return;
     const r = new FileReader();
-    r.onload = e => { f.spectrum = { data: e.target.result, name: file.name, addedAt: Date.now() }; site.updated = Date.now(); saveData(); S.loadPhotoTab(D.cur); };
+    r.onload = e => {
+      S.resizeImage(e.target.result, 1200, 0.88).then(resized => {
+        f.spectrum = { data: resized, name: file.name, addedAt: Date.now() };
+        site.updated = Date.now(); saveData(); S.loadPhotoTab(D.cur);
+      });
+    };
     r.readAsDataURL(file);
   },
 
